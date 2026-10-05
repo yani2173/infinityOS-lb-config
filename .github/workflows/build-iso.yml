@@ -83,8 +83,13 @@ jobs:
           # NotImplemented. copy-object issues a single CopyObject request
           # (our file is well under the 5GiB single-copy limit) whose tag
           # handling is done server-side, so it never touches that endpoint.
+          #
+          # R2 performs CopyObject synchronously server-side, which for a
+          # multi-GB file can take longer than the CLI's default 60s read
+          # timeout, aborting the client side even though R2 may still finish
+          # it. --cli-read-timeout 0 disables that timeout for this call.
           aws s3 cp "${{ steps.find_iso.outputs.iso_path }}" "s3://files/${STAGING_KEY}" --endpoint-url "$ENDPOINT"
-          aws s3api copy-object --endpoint-url "$ENDPOINT" --bucket files --copy-source "files/${STAGING_KEY}" --key "$FINAL_KEY"
+          aws s3api copy-object --cli-read-timeout 0 --cli-connect-timeout 60 --endpoint-url "$ENDPOINT" --bucket files --copy-source "files/${STAGING_KEY}" --key "$FINAL_KEY"
           aws s3 rm "s3://files/${STAGING_KEY}" --endpoint-url "$ENDPOINT"
 
           aws s3 cp "${{ steps.checksum.outputs.checksum_path }}" "s3://files/iso/infinityOS-amd64.iso.sha256" --endpoint-url "$ENDPOINT"
