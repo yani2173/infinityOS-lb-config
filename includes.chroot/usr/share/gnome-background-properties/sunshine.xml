@@ -2,6 +2,11 @@
 <!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
 <wallpapers>
   <wallpaper deleted="false">
+    <name>Frame</name>
+    <filename>/usr/share/backgrounds/sunshine/frame.png</filename>
+    <options>zoom</options>
+  </wallpaper>
+  <wallpaper deleted="false">
     <name>Bright Future</name>
     <filename>/usr/share/backgrounds/sunshine/brightFuture.png</filename>
     <options>zoom</options>
