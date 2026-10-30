@@ -2,16 +2,16 @@
 icon-theme='Radience'
 
 [org.gnome.shell]
-enabled-extensions=['blur-my-shell@aunetx', 'dash-to-dock@micxgx.gmail.com', 'OriginUICC@quandz24.extension', 'OriginUIPrivateMode@quandz24.extension', 'user-theme@gnome-shell-extensions.gcampax.github.com']
+enabled-extensions=['blur-my-shell@aunetx', 'dash-to-dock@micxgx.gmail.com', 'Origin@appscreen', 'OriginUICC@quandz24.extension', 'OriginUIPrivateMode@quandz24.extension', 'user-theme@gnome-shell-extensions.gcampax.github.com']
 disable-user-extensions=false
 
 [org.gnome.desktop.background]
-picture-uri='file:///usr/share/backgrounds/sunshine/main.png'
-picture-uri-dark='file:///usr/share/backgrounds/sunshine/main.png'
+picture-uri='file:///usr/share/backgrounds/sunshine/frame.png'
+picture-uri-dark='file:///usr/share/backgrounds/sunshine/frame.png'
 picture-options='zoom'
 
 [org.gnome.desktop.screensaver]
-picture-uri='file:///usr/share/backgrounds/sunshine/main.png'
+picture-uri='file:///usr/share/backgrounds/sunshine/frame.png'
 
 [org.gnome.desktop.wm.preferences]
 button-layout='appmenu:minimize,maximize,close'
