@@ -97,6 +97,11 @@ jobs:
       - name: Create GitHub Release with checksum
         uses: softprops/action-gh-release@v2
         with:
+          # Tag pushes release under their own tag. Manual (workflow_dispatch)
+          # runs have no tag, so create one per run and mark it a prerelease.
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('build-{0}', github.run_number) }}
+          target_commitish: ${{ github.sha }}
+          prerelease: ${{ github.ref_type != 'tag' }}
           files: |
             ${{ steps.checksum.outputs.checksum_path }}
           generate_release_notes: true
