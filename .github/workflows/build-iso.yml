@@ -1,6 +1,6 @@
 name: Build and Release ISO
-
 on:
+  workflow_dispatch:
   push:
     tags:
       - "v*.*.*"
