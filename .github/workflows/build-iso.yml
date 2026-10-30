@@ -11,6 +11,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Secrets can't be read in `if:` conditions directly. Forks don't inherit
+      # the upstream R2 secrets, so R2 upload is skipped when they're unset and
+      # the ISO is only published as a workflow artifact.
+      HAS_R2: ${{ secrets.R2_ENDPOINT != '' }}
     steps:
       - name: Checkout repo into config/
         uses: actions/checkout@v4
@@ -63,7 +68,19 @@ jobs:
           sha256sum "${{ steps.find_iso.outputs.iso_name }}" > "${{ steps.find_iso.outputs.iso_name }}.sha256"
           echo "checksum_path=$(pwd)/${{ steps.find_iso.outputs.iso_name }}.sha256" >> "$GITHUB_OUTPUT"
 
+      # The ISO is already compressed, so skip zipping it again.
+      - name: Upload ISO as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: infinityOS-amd64-iso
+          path: |
+            ${{ steps.find_iso.outputs.iso_path }}
+            ${{ steps.checksum.outputs.checksum_path }}
+          compression-level: 0
+          if-no-files-found: error
+
       - name: Upload ISO to Cloudflare R2
+        if: env.HAS_R2 == 'true'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -106,4 +123,4 @@ jobs:
             ${{ steps.checksum.outputs.checksum_path }}
           generate_release_notes: true
           body: |
-            ISO download: https://files.jotalea.com.ar/iso/infinityOS-amd64.iso
+            ISO download: ${{ env.HAS_R2 == 'true' && 'https://files.jotalea.com.ar/iso/infinityOS-amd64.iso' || format('{0}/{1}/actions/runs/{2} (artifact "infinityOS-amd64-iso", requires GitHub login)', github.server_url, github.repository, github.run_id) }}
